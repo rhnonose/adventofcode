@@ -24,8 +24,16 @@ defmodule VacuumHouse  do
     String.codepoints |>
     Enum.reduce([{0,0}], 
       fn (movement, trail) ->
-        trail ++ [calculate_coordinate(movement, List.last(trail))]
+        concat(trail, calculate_coordinate(movement, List.last(trail)))
       end)
+  end
+
+  def concat(trail, []) do
+    trail
+  end
+
+  def concat(trail, mov) do
+    trail ++ [mov]
   end
 
   def calculate_coordinate("v", {x,y}) do
