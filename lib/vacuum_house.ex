@@ -20,10 +20,18 @@ defmodule VacuumHouse  do
   end
 
   def register_trail(moves) do
+    {santa, robot} =
     moves |>
     String.codepoints |>
-    Enum.reduce([{0,0}], 
-      fn (movement, trail) ->
+    Enum.with_index |>
+    Enum.partition(fn {_move, index} -> rem(index, 2) == 1 end)
+    Enum.concat(build_trail(santa), build_trail(robot))
+  end
+
+  def build_trail(moves) do
+    moves |>
+    Enum.reduce([{0,0}],
+      fn ({movement, _index}, trail) ->
         concat(trail, calculate_coordinate(movement, List.last(trail)))
       end)
   end
