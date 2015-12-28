@@ -4,32 +4,28 @@ defmodule AdventCoins do
     AdventCoins.Supervisor.start_link()
   end
 
-  def find_hash do
+  def encrypt(acc) do
+    acc_str = Integer.to_string(acc)
     :crypto.hash_init(:md5) |>
     :crypto.hash_update("iwrupvqb") |>
-    find_5zero_hash(100000)
-  end
-
-  def find_5zero_hash(hash, input)
-    when hash |> 
-         :crypto.hash_update(input) |>
-         :crypto.hash_final |>
-         Base.encode16 |>
-         String.starts_with?("00000")
-  do
-    input
-  end
-
-  def find_5zero_hash(hash, input) do
-    hash |> find_5zero_hash(input+1)
-  end
-
-  def stop_condition(hash, input) do
-    hash |>
-    :crypto.hash_update(input) |>
+    :crypto.hash_update(acc_str) |>
     :crypto.hash_final |>
-    Base.encode16 |>
-    String.starts_with?("00000")
+    Base.encode16
+  end
+
+  def find_hash(acc) do
+    acc |>
+    encrypt |>
+    find_hash(acc)
+  end
+
+  def find_hash("000000" <> _, acc) do
+    acc
   end
   
+  def find_hash(_, acc) do
+    encrypt(acc+1) |>
+    find_hash(acc+1)
+  end
+
 end
