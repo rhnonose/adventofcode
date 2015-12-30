@@ -1,1 +1,1 @@
-# My AdventOfCode.com implementations
+My AdventOfCode.com implementations
